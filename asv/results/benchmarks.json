@@ -1,0 +1,27 @@
+{
+    "Q1 Parameters.TimeSuite.TimeQ1": {
+        "code": "class TimeSuite:\n    def TimeQ1(self, n):\n        class Q1Processor(processor.ProcessorABC):\n            def process(self, events):\n                return (\n                    hist.Hist.new.Reg(100, 0, 200, name=\"met\", label=\"$E_{T}^{miss}$ [GeV]\")\n                    .Double()\n                    .fill(events.MET.pt)\n                )\n            def postprocess(self, accumulator):\n                return accumulator\n        if os.environ.get(\"LABEXTENTION_FACTORY_MODULE\") == \"coffea_casa\":\n            from dask.distributed import Client\n            client = Client(\"tls://localhost:8786\")\n            executor = processor.DaskExecutor(client=client)\n        else:\n            executor = processor.IterativeExecutor()\n        run = processor.Runner(executor=executor,\n                       schema=schemas.NanoAODSchema,\n                       savemetrics=True,\n                       chunksize=n,\n                      )\n        run(fileset, \"Events\", processor_instance=Q1Processor())",
+        "min_run_count": 2,
+        "name": "Q1 Parameters.TimeSuite.TimeQ1",
+        "number": 0,
+        "param_names": [
+            "param1"
+        ],
+        "params": [
+            [
+                "131072",
+                "262144",
+                "524288"
+            ]
+        ],
+        "repeat": 0,
+        "rounds": 2,
+        "sample_time": 0.01,
+        "timeout": 1200.0,
+        "type": "time",
+        "unit": "seconds",
+        "version": "5a66d770e5a366ef68b069e68f1a3081bb235fa10559b51313f84d548df182e4",
+        "warmup_time": -1
+    },
+    "version": 2
+}
